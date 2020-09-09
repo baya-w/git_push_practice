@@ -1,0 +1,311 @@
+%%変数宣言（パターン）%%
+\newif\ifNote 
+%\Notetrue		%Note
+\Notefalse	%Beamer
+\newif\ifASPECT
+\ASPECTfalse
+
+%%初期設定%%
+\ifNote 	%Note
+	\documentclass[dvipdfmx,twocolumn,b5paper,10.5pt]{jarticle}		%a4paper
+	\usepackage[top=15truemm,bottom=15truemm,left=15truemm,right=15truemm]{geometry}
+	\usepackage[dvipdfmx]{hyperref}
+	\usepackage{pxjahyper}
+\else	%Beamer
+	\ASPECTtrue
+	\ifASPECT
+		\documentclass[aspectratio=169,dvipdfmx]{beamer}
+	\else
+		\documentclass[dvipdfmx]{beamer}
+	\fi
+	\usetheme{Madrid}
+	\setbeamertemplate{navigation symbols}{}
+\fi
+
+
+%%書式%%
+\usepackage{pxrubrica} %ルビ
+\usepackage{multicol}
+\newcommand{\ctext}[1]{\raise0.2ex\hbox{\textcircled{\scriptsize{#1}}}}%丸囲い文字
+\setlength{\columnseprule}{0.4pt} %段組み設定
+\ifNote 
+	\renewcommand{\labelitemi}{・}
+\else
+	\setbeamerfont{frametitle}{series=\bfseries}
+	\setbeamerfont{title}{size=\LARGE} % タイトル文字サイズ
+	\setbeamerfont{tableofcontents}{size=\LARGE, series=\bfseries}
+	\usefonttheme{professionalfonts}
+	\setbeamertemplate{enumerate items}[default]
+	\newcommand{\redunderline}[1]{\textcolor{green}{\underline{\textcolor{black}{#1}}}}
+	\ifASPECT
+		\setbeamertemplate{frametitle}{ %スライドスタイル
+			\begin{tikzpicture}
+				\node (0,0)[above right]{\vspace*{1.5mm} \textcolor{maincolor}{\insertframetitle}};
+				\draw[maincolor,very thick](0,0)--(15,0)node[above left]{\vspace*{1.5mm} \textcolor{maincolor}{ {\scriptsize \insertsection}}}; 
+				\end{tikzpicture}
+			}
+	\else
+		\setbeamertemplate{frametitle}{ %スライドスタイル
+			\vspace*{1.5mm}
+			\textcolor{maincolor}{\insertframetitle \hspace{\fill}  {\scriptsize \insertsection}}
+			\\ \vspace*{-7mm}
+			\begin{tikzpicture}
+				\draw[maincolor,very thick](0,0)--(12,0); 
+			\end{tikzpicture}
+		}
+	\fi
+\fi
+\newcommand{\GT}{\usefont{T1}{phv}{b}{n} \usekanji{JY1}{gt}{bx}{n}}
+\newcommand{\RAJI}{\LARGE}
+\renewcommand{\refname}{\vspace{-10mm}}
+\ifNote \else
+	\setbeamertemplate{blocks}[rounded][shadow=false]
+\fi
+
+%%章番号%%
+\ifNote \usepackage{titlesec} \fi
+%\titleformat*{\section}{\LARGE \bfseries}
+%\titleformat*{\subsection}{\Large \bfseries}
+
+\makeatletter
+  \renewcommand{\theequation}{%
+  \thesection.\arabic{equation}}
+  \@addtoreset{equation}{section}
+\makeatother
+
+\ifNote
+%	\renewcommand{\thesection}{\S}\arabic{section}.}
+%	\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+%	\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+%\makeatletter%% プリアンブルで再定義する際は必須
+%
+%\renewcommand{\section}{\@startsection{section}% #1 見出し
+%   {1}% #2 見出しのレベル
+%   {\z@}% #3 横組みの場合、見出し左の空き(インデント量)
+%   {.5\Cvs }% #4 見出し上の空き
+%   {.3\Cvs }% #5 見出し下の空き (負の値なら見出し後の空き) 
+%   {\normalfont\Large\sffamily\gtfamily}}% フォントを変更する： #6 見出しの属性
+%%  {\centering\normalfont\Large\bfseries}}% 中央揃え
+%%  {\raggedleft\normalfont\Large\bfseries}}% 右揃え
+%\renewcommand*{\l@section} {\@dottedtocline{1}{-0.1zw}{5zw}}
+%\renewcommand*{\l@subsection} {\@dottedtocline{1}{0.9zw}{6zw}}
+%\makeatother%% プリアンブルで再定義する際は必須
+%
+%\renewcommand{\thesection}{
+%\hspace*{5mm}\S\hspace{0.1mm} \arabic{section} 
+% }
+% 
+% \makeatletter%% プリアンブルで再定義する際は必須
+%
+%\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+%   {.7\Cvs}%
+%   {.1\Cvs}%
+%   {\normalfont\large\sffamily\gtfamily}}%% フォントを変更する
+%
+%\makeatother%% プリアンブルで再定義する際は必須
+\else 
+	\AtBeginSection[]{
+    	\begin{frame}
+    	\vspace{1cm}
+    	{\setulwidth{1pt}\textcolor{maincolor}{\unl{\RAJI{\GT \insertsection}}}}
+%    \redunderline{\textcolor{green}{\RAJI{\GT \insertsection}}}
+%    	\tableofcontents[sections=\value{section}]
+   		\end{frame}
+	}
+\fi
+
+%%図関係%%
+\ifNote \usepackage[dvipdfmx]{graphicx} \fi
+\usepackage{here} %figure環境オプション[H]
+\renewcommand{\figurename}{Fig.}
+\newcommand{\figcaption}[1]{\def\@captype{figure}\caption{#1}}
+\newcommand{\tblcaption}[1]{\def\@captype{table}\caption{#1}}
+\graphicspath{{./Fig/}}
+\setlength\floatsep{0pt} %ページの上下に出力される図と図の間のスペース
+\setlength\textfloatsep{0pt}%ページの上下に出力される図と本文の間のスペース
+\setlength\intextsep{0pt}%ページの途中に出力される図と本文の間のスペース
+\setlength\abovecaptionskip{0pt}%図とキャプションの間のスペース
+\usepackage{colortbl}
+
+%%tikz%%
+\usepackage{siunitx}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usetikzlibrary{intersections}
+\usepackage{calc}
+\usetikzlibrary{math}
+\usetikzlibrary{patterns}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes.callouts}
+\usetikzlibrary{shapes.arrows}
+
+%色
+\usepackage{color}
+\newcommand{\emp}[1]{{\gt \color{red}#1}}
+\colorlet{darkgreen}{green!60!black}
+\colorlet{whitegreen}{green!80!black}
+\colorlet{kindblack}{black!80}	%背景黒
+\colorlet{maincolor}{darkgreen}
+\colorlet{footcolor}{maincolor!30!white}
+\colorlet{footfgcolor}{maincolor}
+\colorlet{normaltextcolor}{black}
+\ifNote \else
+	%\setbeamercolor{frametitle}{fg=black}
+	\setbeamercolor{normal text}{fg=normaltextcolor, bg=white}
+	\setbeamercolor{block title}{fg=normaltextcolor, bg=maincolor!80!black}
+	\setbeamercolor{block body}{fg=black, bg=maincolor!20!white}
+	\colorlet{beamer@blendedblue}{maincolor!40!white} %テーマ
+	\setbeamercolor{page number in head/foot}{fg=footfgcolor}
+	\setbeamercolor{author in head/foot}{fg=footfgcolor, bg=footcolor}
+	\setbeamercolor{title in head/foot}{fg=footfgcolor, bg=footcolor}
+	\setbeamercolor{date in head/foot}{fg=footfgcolor, bg=footcolor}
+	\setbeamercolor{title}{bg=maincolor!20!white}
+\fi
+%\renewcommand{\columnseprulecolor}{\color{green!70!black}}
+
+
+%%吹き出し%%
+\ifNote
+	\newcommand{\fukidashi}[2]{
+	\tikz[remember picture,baseline]{%
+	\node[anchor=base,inner sep=0,outer sep=0]%
+	(#1) {#1};\node[draw=black, overlay,rectangle callout,rounded corners=1pt,fill=white,line width=0.5pt,callout absolute pointer={($(#1.north)+(0pt,5pt)$)}] 
+	at ($(#1.north)+(0pt,20pt)$) {#2};}%
+	}%
+\else
+	\newcommand{\fukidashi}[2]{
+	\tikz[remember picture,baseline]{%
+	\node[anchor=base,inner sep=0,outer sep=0]%
+	(#1) {#1};\node[draw=maincolor, overlay,rectangle callout,rounded corners=1pt,fill=maincolor!20!white,line width=0.5pt,callout absolute pointer={($(#1.north)+(0pt,5pt)$)}] 
+	at ($(#1.north)+(0pt,20pt)$) {#2};}%
+	}%
+\fi
+
+%%表関係%%
+\renewcommand{\tablename}{Table}
+
+%%数式関係%%
+\usepackage{ascmac}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{physics}
+
+%%ソースコード%%
+\usepackage{listings,jlisting} %日本語のコメントアウト
+\renewcommand{\lstlistingname}{SourceCode}
+\ifNote
+	\lstset{%ここからソースコードの表示に関する設定
+  		language={Java},
+  		basicstyle={\ttfamily},
+  		identifierstyle={\small},
+  		commentstyle={\smallitshape},
+  		keywordstyle={\small\bfseries},
+ 		 ndkeywordstyle={\small},
+  		stringstyle={\small\ttfamily},
+  		frame={tb},
+ 		breaklines=true,
+  		columns=[l]{fullflexible},
+  		numbers=left,
+  		xrightmargin=0zw,
+  		xleftmargin=3zw,
+  		numberstyle={\scriptsize},
+  		stepnumber=1,
+  		numbersep=1zw,
+  		lineskip=-0.5ex
+	}
+\else
+	\lstset{
+   		language={Java}, %プログラミング言語によって変える。
+  		basicstyle={\ttfamily\small},
+  		keywordstyle={\color{blue}},
+  		commentstyle={\color{gray}},
+  		stringstyle=\color{red},
+  		tabsize=2,
+  		%% breaklines=true, %折り返し
+	}
+\fi
+\usepackage{keyval}
+\usepackage{kvoptions}
+\usepackage{fancyvrb}
+\usepackage{fvextra}
+\usepackage{upquote}
+\usepackage{float}
+\usepackage{ifthen}
+\usepackage{calc}
+\usepackage{ifplatform}
+\usepackage{pdftexcmds}
+\usepackage{etoolbox}
+\usepackage{xstring}
+\usepackage{xcolor}
+\usepackage{lineno}
+\usepackage{framed}
+\usepackage{shellesc}
+\usepackage{minted}
+%\renewcommand{\MintedPygmentize}{C:\Python27\Scripts\pygmentize.exe}
+
+%counter
+\newcounter{mynum} % カウンタの宣言
+\setcounter{mynum}{0} % カウンタの初期化
+\newcommand{\mynum}[1][]{\refstepcounter{mynum}{#1}{\themynum}}%\refstepcounterの利用
+
+%%その他拡張機能%%
+\usepackage{itembkbx}	%breakitembox
+\def\breakboxparindent{0zw}  %1行目でインデント無くす
+\usepackage{amsmath}
+\usepackage{overpic}
+\usepackage{ulem}
+\usepackage{url}
+\usepackage{udline}
+
+%QR
+\usepackage{qrcode}
+
+%%タイトル%%
+\ifNote		%Note
+	\title{\gt \vspace{-5mm}}
+	\author{}
+	\date{}
+\else	%Beamer
+	\title{\textcolor{maincolor}{}}
+	\author{\textcolor{maincolor}{\vspace{0.7cm}}}
+	\date{\textcolor{maincolor}{}}
+\fi
+
+\begin{document}
+	
+\begin{frame}[fragile]{push}
+\begin{minted}{console}
+$ cd /path/
+$ git add .
+$ git commit -m "comment"
+$ git remote add origin <ssh url>
+$ git remote set-url origin <ssh url>
+$ git push -u origin master
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{ssh setup}
+\begin{minted}{console}
+$ cd ~/.ssh
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Users/(username)/.ssh/id_rsa):<Enter>
+Enter passphrase (empty for no passphrase):<Enter>
+Enter same passphrase again:<Enter>
+$ clip < ~/.ssh/id_rsa.pub
+<Setting at https://github.com/settings/ssh>
+$ ssh -T git@github.com
+Hi <account>! You've successfully authenticated, 
+but GitHub does not provide shell access.
+\end{minted}
+\bigskip
+\textcolor{maincolor}{\href{https://qiita.com/shizuma/items/2b2f873a0034839e47ce}{https://qiita.com/shizuma/items/2b2f873a0034839e47ce}}
+\end{frame}
+
+
+
+\end{document}
